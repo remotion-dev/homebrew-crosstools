@@ -177,6 +177,13 @@ class Toolchain < Formula
       ENV.delete "CC"
       ENV.delete "CXX"
       system "ct-ng", "defconfig"
+      config = File.read(".config")
+      new_contents = config.gsub(/CT_ZLIB_V_1_2_12/, "CT_ZLIB_V_1_2_13")
+      new_contents = config.gsub(/CT_ZLIB_VERSION="1.2.12"/, 'CT_ZLIB_VERSION="1.2.13"')
+
+      puts new_contents
+      
+      File.open(".config", "w") {|file| file.puts new_contents }
       system "ct-ng", "build"
     end
 
