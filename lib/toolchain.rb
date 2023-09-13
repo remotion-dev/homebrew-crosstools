@@ -40,6 +40,7 @@ class Toolchain < Formula
     CT_DEBUG_CT=y
     CT_DEBUG_CT_SAVE_STEPS=y
     <% end %>
+    CT_ZLIB_VERSION="1.2.13"
   EOF
 
   delegate defconfig: :"self.class"
