@@ -13,11 +13,13 @@ class Toolchain < Formula
     CT_BINUTILS_LINKER_LD_GOLD=y
     CT_BINUTILS_PLUGINS=y
     CT_BINUTILS_V_2_37=y
+    CT_ZLIB_VERSION="1.3"
+    CT_ZLIB_MIRRORS="zlib.net/fossils"
     CT_CC_GCC_BUILD_ID=y
     CT_CC_LANG_CXX=y
     CT_CONFIG_VERSION="3"
     CT_EXPERIMENTAL=y
-    CT_FORBID_DOWNLOAD=y
+    CT_FORBID_DOWNLOAD=n
     CT_GCC_V_11=y
     CT_GETTEXT_V_0_21=y
     CT_GLIBC_V_<%= glibc_version.gsub(".", "_") %>=y
@@ -40,7 +42,6 @@ class Toolchain < Formula
     CT_DEBUG_CT=y
     CT_DEBUG_CT_SAVE_STEPS=y
     <% end %>
-    CT_ZLIB_VERSION="1.2.13"
   EOF
 
   delegate defconfig: :"self.class"
@@ -178,13 +179,16 @@ class Toolchain < Formula
       ENV.delete "CXX"
       system "ct-ng", "defconfig"
       config = File.read(".config")
-      new_contents = config.gsub(/CT_ZLIB_V_1_2_12/, "CT_ZLIB_V_1_2_13")
-      new_contents = config.gsub(/CT_ZLIB_VERSION="1.2.12"/, 'CT_ZLIB_VERSION="1.2.13"')
+      new_contents = config.gsub('CT_ZLIB_MIRRORS="http://downloads.sourceforge.net/project/libpng/zlib/${CT_ZLIB_VERSION} https://www.zlib.net/"', 'CT_ZLIB_MIRRORS="https://zlib.net/fossils"')
 
-      puts new_contents
       
       File.open(".config", "w") {|file| file.puts new_contents }
+      
+      new_config = File.read(".config")
+      puts new_config
+
       system "ct-ng", "build"
+      end
     end
 
     # Remove the few files that conflict on case-sensitive filesystems. This is
